@@ -1,0 +1,13 @@
+output "aws_region" { value = var.aws_region }
+output "bucket_name" { value = aws_s3_bucket.images.id }
+output "key_prefix" { value = local.key_prefix }
+output "storage_role_arn" { value = aws_iam_role.hcti_storage.arn }
+output "aws_external_id" { value = data.htmlcsstoimage_aws_storage_external_id.organization.external_id }
+output "storage_destination_id" { value = htmlcsstoimage_storage_destination.images.id }
+output "create_secret_arn" { value = aws_secretsmanager_secret.create.arn }
+output "automation_secret_arn" { value = aws_secretsmanager_secret.automation.arn }
+output "image_id" { value = htmlcsstoimage_image_html_css.card.id }
+output "image_url" { value = htmlcsstoimage_image_html_css.card.image_url }
+output "render_method" { value = htmlcsstoimage_image_html_css.card.render_method }
+output "render_requires_auth" { value = htmlcsstoimage_image_html_css.card.render_requires_auth }
+output "public_url" { value = htmlcsstoimage_image_html_css.card.public_url }

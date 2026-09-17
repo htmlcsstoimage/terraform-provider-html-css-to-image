@@ -1,0 +1,42 @@
+version: 2
+project_name: terraform-provider-html-css-to-image
+builds:
+  - env:
+      - CGO_ENABLED=0
+      - GOWORK=off
+    flags: [-trimpath, -mod=readonly]
+    ldflags:
+      - '-s -w -X main.version={{ .Version }}'
+    mod_timestamp: '{{ .CommitTimestamp }}'
+    binary: '{{ .ProjectName }}_v{{ .Version }}'
+    goos: [linux, darwin, windows, freebsd]
+    goarch: [amd64, arm64]
+archives:
+  - formats: [zip]
+    name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}'
+    files: [LICENSE]
+checksum:
+  name_template: '{{ .ProjectName }}_{{ .Version }}_SHA256SUMS'
+  algorithm: sha256
+  extra_files:
+    - glob: terraform-registry-manifest.json
+      name_template: '{{ .ProjectName }}_{{ .Version }}_manifest.json'
+signs:
+  - artifacts: checksum
+    args:
+      - --batch
+      - --local-user
+      - '{{ .Env.GPG_FINGERPRINT }}'
+      - --output
+      - '${signature}'
+      - --detach-sign
+      - '${artifact}'
+release:
+  prerelease: auto
+  # Publish only after GoReleaser has uploaded every signed asset successfully.
+  draft: true
+  extra_files:
+    - glob: terraform-registry-manifest.json
+      name_template: '{{ .ProjectName }}_{{ .Version }}_manifest.json'
+changelog:
+  use: github-native

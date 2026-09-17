@@ -1,0 +1,94 @@
+name: Release
+on:
+  workflow_run:
+    workflows: [Test]
+    types: [completed]
+    branches: [main]
+concurrency:
+  group: release
+  cancel-in-progress: false
+permissions:
+  contents: read
+jobs:
+  release:
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GOWORK: 'off'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.workflow_run.head_sha }}
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Check release version
+        id: version
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(cat VERSION)"
+          if [[ ! "$version" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-(alpha|beta|rc)\.(0|[1-9][0-9]*))?$ ]]; then
+            echo 'VERSION must contain a semantic version such as 0.1.0 or 0.1.0-beta.1, without a v prefix.' >&2
+            exit 1
+          fi
+          tag="v${version}"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          releases="$(gh api --paginate "repos/${GITHUB_REPOSITORY}/releases?per_page=100" --jq '.[] | [.tag_name, .draft] | @tsv')"
+          while IFS=$'\t' read -r release_tag draft; do
+            if [[ "$release_tag" == "$tag" && "$draft" == false ]]; then
+              echo "$tag is already published; leaving it unchanged."
+              echo 'publish=false' >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          done <<< "$releases"
+          create_tag=true
+          if git rev-parse --verify --quiet "refs/tags/${tag}" >/dev/null; then
+            create_tag=false
+            if [[ "$(git rev-list -n 1 "$tag")" != "$(git rev-parse HEAD)" ]]; then
+              echo "$tag belongs to another commit. Rerun its original release workflow or bump VERSION." >&2
+              exit 1
+            fi
+          fi
+          echo "create_tag=$create_tag" >> "$GITHUB_OUTPUT"
+          echo 'publish=true' >> "$GITHUB_OUTPUT"
+      - name: Import release signing key
+        if: steps.version.outputs.publish == 'true'
+        id: signing
+        uses: crazy-max/ghaction-import-gpg@2dc316deee8e90f13e1a351ab510b4d5bc0c82cd # v7.0.0
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
+      - name: Create version tag
+        if: steps.version.outputs.publish == 'true' && steps.version.outputs.create_tag == 'true'
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git tag --annotate "$TAG" --message "Release $TAG"
+          git push origin "refs/tags/${TAG}"
+      # Run here: tags created with GITHUB_TOKEN do not start another workflow.
+      - name: Build and sign release
+        if: steps.version.outputs.publish == 'true'
+        uses: goreleaser/goreleaser-action@f06c13b6b1a9625abc9e6e439d9c05a8f2190e94 # v7.2.3
+        with:
+          version: v2.18.2
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GPG_FINGERPRINT: ${{ steps.signing.outputs.fingerprint }}
+      - name: Publish completed release
+        if: steps.version.outputs.publish == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+        run: gh release edit "$TAG" --draft=false

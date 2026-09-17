@@ -1,0 +1,3 @@
+.local.tfrc
+.local-providers/
+.terraform.lock.hcl

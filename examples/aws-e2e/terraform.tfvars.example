@@ -1,0 +1,5 @@
+aws_region = "us-east-1"
+name       = "hcti-e2e"
+# Copy the HCTI Principal.AWS role ARN from the dashboard-generated trust policy.
+hcti_writer_role_arn = "arn:aws:iam::123456789012:role/REPLACE_WITH_HCTI_WRITER_ROLE"
+# hcti_base_url = "https://your-deployed-api.example.com"
