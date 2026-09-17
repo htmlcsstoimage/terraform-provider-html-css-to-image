@@ -8,14 +8,14 @@ Resources include proxies, API keys, OG configs, storage destinations, HTML/CSS 
 
 ## Installation
 
-The provider is available as a beta. Select the prerelease explicitly:
+Add the provider to your Terraform configuration:
 
 ```hcl
 terraform {
   required_providers {
     htmlcsstoimage = {
       source  = "htmlcsstoimage/html-css-to-image"
-      version = "= 0.1.0-beta.2"
+      version = "= 0.1.0"
     }
   }
 }
@@ -48,6 +48,7 @@ For a complete AWS setup, see [the end-to-end example](examples/aws-e2e/README.m
 - [Template: versioning, rendering inputs, and import](docs/resources/template.md)
 - [HTML/CSS image](docs/resources/image_html_css.md), [URL image](docs/resources/image_url.md), and [templated image](docs/resources/image_templated.md)
 - [AWS storage external ID lookup](docs/data-sources/aws_storage_external_id.md)
+- [Existing template lookup](docs/data-sources/template.md) and [template version listing](docs/data-sources/template_versions.md)
 
 ## Proxy behavior
 

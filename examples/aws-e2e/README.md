@@ -35,7 +35,7 @@ terraform apply
 terraform plan -detailed-exitcode
 ```
 
-Terraform installs the HCTI beta and AWS/time providers from the Terraform Registry.
+Terraform installs the HCTI and AWS/time providers from the Terraform Registry.
 
 For staging, set `hcti_base_url` to the deployed API origin and use that environment's writer role ARN and bootstrap credentials. AWS region/profile selection must remain consistent between Terraform and the render script.
 

@@ -29,12 +29,12 @@ func (r *AWSStorageExternalIDDataSource) Configure(_ context.Context, req dataso
 	if req.ProviderData == nil {
 		return
 	}
-	c, ok := req.ProviderData.(*management.Client)
+	c, ok := req.ProviderData.(*dataSourceClients)
 	if !ok {
 		resp.Diagnostics.AddError("Invalid provider configuration", "Expected an HCTI management client.")
 		return
 	}
-	r.client = c
+	r.client = c.management
 }
 func (r *AWSStorageExternalIDDataSource) Read(ctx context.Context, _ datasource.ReadRequest, resp *datasource.ReadResponse) {
 	v, err := r.client.GetAWSExternalID(ctx)

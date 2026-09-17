@@ -22,7 +22,7 @@ terraform {
   required_providers {
     htmlcsstoimage = {
       source  = "htmlcsstoimage/html-css-to-image"
-      version = "= 0.1.0-beta.2"
+      version = "= 0.1.0"
     }
   }
 }
@@ -42,8 +42,6 @@ output "image_url" {
 
 Run `terraform init`, `terraform plan`, and `terraform apply`.
 
-This provider is in beta. Select the prerelease version explicitly as shown above; configuration and behavior may change before the stable release.
-
 ## Resources
 
 For step-by-step examples, see [creating images](guides/create-images.md), [using reusable templates](guides/template-images.md), and [managing application API keys](guides/application-api-keys.md).
@@ -60,6 +58,8 @@ For step-by-step examples, see [creating images](guides/create-images.md), [usin
 | [OG configuration](resources/og_config.md) | Configure Open Graph image generation for your website. |
 
 The [AWS storage lookup](data-sources/aws_storage_external_id.md) returns your organization's external ID and HCTI's writer role ARN for an IAM trust policy. See the [complete AWS example](https://github.com/htmlcsstoimage/terraform-provider-html-css-to-image/tree/main/examples/aws-e2e) for S3, IAM, Secrets Manager, and image delivery.
+
+To reference a template created outside Terraform, use the [template lookup](data-sources/template.md). The [template versions lookup](data-sources/template_versions.md) lists available versions and their metadata without managing them.
 
 ## Authentication
 

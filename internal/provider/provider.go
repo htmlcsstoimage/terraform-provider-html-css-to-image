@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	hcti "github.com/htmlcsstoimage/go-client"
 	"github.com/htmlcsstoimage/go-client/management"
 )
 
@@ -69,11 +70,11 @@ func (p *Provider) Configure(ctx context.Context, req provider.ConfigureRequest,
 	}
 	client := management.NewClient(id, key, management.WithBaseURL(origin), management.WithUserAgentSuffix(p.userAgent))
 	resp.ResourceData = client
-	resp.DataSourceData = client
+	resp.DataSourceData = &dataSourceClients{management: client, public: hcti.NewClient(id, key, hcti.WithBaseURL(origin), hcti.WithUserAgentSuffix(p.userAgent))}
 }
 func (*Provider) Resources(context.Context) []func() resource.Resource {
 	return []func() resource.Resource{NewProxyResource, NewAPIKeyResource, NewOGConfigResource, NewStorageDestinationResource, NewTemplateResource, NewImageHTMLCSSResource, NewImageURLResource, NewImageTemplatedResource}
 }
 func (*Provider) DataSources(context.Context) []func() datasource.DataSource {
-	return []func() datasource.DataSource{NewAWSStorageExternalIDDataSource}
+	return []func() datasource.DataSource{NewAWSStorageExternalIDDataSource, NewTemplateDataSource, NewTemplateVersionsDataSource}
 }
