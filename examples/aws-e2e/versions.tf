@@ -3,7 +3,7 @@ terraform {
   required_providers {
     htmlcsstoimage = {
       source  = "htmlcsstoimage/html-css-to-image"
-      version = "= 0.1.0-beta.1"
+      version = "= 0.1.0-beta.2"
     }
     aws = {
       source  = "hashicorp/aws"

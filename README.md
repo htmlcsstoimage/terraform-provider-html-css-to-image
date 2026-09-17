@@ -2,6 +2,8 @@
 
 Manage HTML/CSS to Image resources with Terraform.
 
+[Website](https://htmlcsstoimage.com) · [Documentation](https://docs.htmlcsstoimage.com/) · [Management API](https://docs.htmlcsstoimage.com/management-api/) · [API reference](https://htmlcsstoimage.com/api-docs/) · [Terraform Registry](https://registry.terraform.io/providers/htmlcsstoimage/html-css-to-image/latest/docs)
+
 Resources include proxies, API keys, OG configs, storage destinations, HTML/CSS templates, and HTML/CSS, URL, and templated images. Templates create new versions on edits; image inputs trigger replacement. Image creation saves a definition without rendering bytes.
 
 ## Installation
@@ -13,7 +15,7 @@ terraform {
   required_providers {
     htmlcsstoimage = {
       source  = "htmlcsstoimage/html-css-to-image"
-      version = "= 0.1.0-beta.1"
+      version = "= 0.1.0-beta.2"
     }
   }
 }
@@ -63,4 +65,4 @@ Local validation checks input structure and basic invariants, such as nonnegativ
 
 ## Contributing
 
-See [development](docs/development.md), [live acceptance testing](docs/live-testing.md), and [releasing](docs/guides/releasing.md).
+See [development](docs/development.md), [live acceptance testing](docs/live-testing.md), and [releasing](docs/releasing.md).

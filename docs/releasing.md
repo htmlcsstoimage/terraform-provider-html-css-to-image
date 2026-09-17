@@ -4,7 +4,7 @@ page_title: "Releasing the provider"
 
 # Releasing the provider
 
-Releases are driven by the root `VERSION` file. The initial version is `0.1.0-beta.1`. Beta releases are public prereleases; they are not private drafts. Terraform users must select a prerelease explicitly, for example `version = "= 0.1.0-beta.1"`. Use `0.1.0-beta.2` for the next beta and `0.1.0` when ready for the stable release.
+Releases are driven by the root `VERSION` file. The current version is `0.1.0-beta.2`. Beta releases are public prereleases; they are not private drafts. Terraform users must select a prerelease explicitly, for example `version = "= 0.1.0-beta.2"`. Use `0.1.0-beta.3` for the next beta and `0.1.0` when ready for the stable release.
 
 ## One-time setup
 

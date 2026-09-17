@@ -24,4 +24,4 @@ provider_installation {
 Set `TF_CLI_CONFIG_FILE` to that file and run `terraform plan`/`apply` in [examples/proxy](../examples/proxy). With this development override, skip `terraform init` for single-provider examples; Terraform uses your built binary directly. Set `HCTI_API_ID`, `HCTI_API_KEY`, and `TF_VAR_proxy_password` before applying. Live use requires the management API to be deployed and the caller to have proxy read/write/delete permissions.
 
 
-See [live acceptance testing](live-testing.md) and [releasing](guides/releasing.md).
+See [live acceptance testing](live-testing.md) and [releasing](releasing.md).
